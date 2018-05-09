@@ -14,7 +14,7 @@ class Station
     private $url = '';
     private $servers = [];
 
-    public function __construct($name, $description, $url)
+    public function __construct($url, $name = "", $description = "")
     {
         $this->name = $name;
         $this->description = $description;
@@ -30,6 +30,33 @@ class Station
         if (is_array($server)) {
             $this->servers = array_merge($this->servers, $server);
         }
+    }
+
+    /**
+    * Retrieve metadata for Icecast stream
+    *
+    * @return bool if successful or not with retrieving data
+    * @access public
+    * @author mribbins
+    */
+    public function retrieveMetaData()
+    {
+      $ice_url = $this->servers[0];
+      $ice_url .= "/";
+      $ice_url .= $this->url;
+
+      $headers = get_headers($ice_url, 1);
+
+      if(array_key_exists('icy-name', $headers)) {
+        $this->name = $headers['icy-name'];
+      } else {
+        return false;
+      }
+      if(array_key_exists('icy-description', $headers)) {
+        $this->description = $headers['icy-description'];
+      }
+      
+      return true;
     }
 
     public function getName()

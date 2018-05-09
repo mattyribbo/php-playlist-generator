@@ -58,36 +58,36 @@ class Playlist
     {
         if (!headers_sent()) {
             header('Content-Type: '.$this->available_format[$this->extension]);
-            header('Content-Disposition: attachment; filename='.$this->getStationName().$this->extension);
+            header('Content-Disposition: attachment; filename='.$this->getStationUrl().".".$this->extension);
         }
 
         if ($this->extension === 'asx') {
-            echo '<ASX Version="3.0">'."\n".'<PARAM name="HTMLView" value="'.$this->stationGetUrl().'" />'."\n";
+            echo '<ASX Version="3.0">'."\n".'<PARAM name="HTMLView" value="'.$this->getStationUrl().'" />'."\n";
             foreach($this->getStationServers() as $url) {
-                echo '<ENTRY>'."\n".'<REF HREF="http://'.$url.'" />'."\n".'</ENTRY>'."\n";
+                echo '<ENTRY>'."\n".'<REF HREF="'.$url."/".$this->getStationUrl().'" />'."\n".'</ENTRY>'."\n";
             }
-            echo '<Title>'.$this->getStationDescription().'</Title>'."\n".'</ASX>';
+            echo '<Title>'.$this->getStationName().'</Title>'."\n".'</ASX>';
         } else if ($this->extension === 'm3u') {
             echo '#EXTM3U';
             foreach($this->getStationServers() as $url) {
-                echo "\n".'#EXTINF:-1, '.$this->getStationDescription()."\n".$url;
+                echo "\n".'#EXTINF:-1, '.$this->getStationName()."\n".$url."/".$this->getStationUrl();
             }
         } else if ($this->extension === 'pls') {
-            echo '[playlist]'."\n".'NumberOfEntries='.count($this->stationGetUrl())."\n";
+            echo '[playlist]'."\n".'NumberOfEntries='.count($this->getStationUrl())."\n";
             $i=0;
             foreach($this->getStationServers() as $url) {
                 $i++;
-                echo "\n".'File'.$i.'=http://'.$url."\n".'Title'.$i.'='.$this->getStationDescription()."\n".'Length'.$i.'=-1'."\n";
+                echo "\n".'File'.$i.'='.$url."/".$this->getStationUrl()."\n".'Title'.$i.'='.$this->getStationName()."\n".'Length'.$i.'=-1'."\n";
             }
             echo "\n".'Version=2';
         } else if ($this->extension === 'qtl') {
             echo '<?xml version="1.0"?>'."\n".'<?quicktime type="application/x-quicktime-media-link"?>';
             foreach($this->getStationServers() as $url) {
-                echo "\n".'<embed src="icy://'.$url.'" autoplay="true" />';
+                echo "\n".'<embed src="'.$url."/".$this->getStationUrl().'" autoplay="true" />';
             }
         } else if ($this->extension === 'wax') {
             foreach($this->getStationServers() as $url) {
-                echo $url."\n";
+                echo $url."/".$this->getStationUrl()."\n";
             }
         }
     }
