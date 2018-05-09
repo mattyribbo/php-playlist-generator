@@ -1,10 +1,24 @@
 php-playlist-generator
 ======================
 
-Generate playlist file for audio streaming servers (like: icecast or shoutcast).
+Generate playlist files for audio streaming servers (i.e. Icecast or Shoutcast).
 
-You can create many kind of files:
+Formats supported:
+- M3U
+- PLS
+- QuickTime (qtl)
+- Windows Media Player (asx or wax)
 
-- winamp / macamp / itunes / vlc / xmms (extension: .m3u or .pls)
-- quicktime (extension: .qtl)
-- windows media player (extension: .asx or .wax)
+
+## Web server configuration examples
+### Nginx
+Example rewrite within a location. This will allow /example-stream.mp3.m3u
+to be translated to /playlist-generator/generate.php?stream=example-stream&format=m3u
+```
+   location ^~ / {
+        rewrite ^/(\w+[-]\w+[-]\d+).(\w+).pls$ /playlist-generator/generate.php?stream=$1.$2&format=pls last;
+        rewrite ^/(\w+[-]\w+[-]\d+).(\w+).m3u$ /playlist-generator/generate.php?stream=$1.$2&format=m3u last;
+        rewrite ^/(\w+[-]\w+[-]\d+).(\w+).asx$ /playlist-generator/generate.php?stream=$1.$2&format=asx last;
+        rewrite ^/(\w+[-]\w+[-]\d+).(\w+).xspf$ /playlist-generator/generate.php?stream=$1.$2&format=xspf last;
+    }
+```
