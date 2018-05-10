@@ -14,7 +14,8 @@ class Playlist
         'm3u' => 'audio/x-mpegurl',
         'pls' => 'audio/x-scpls',
         'qtl' => 'application/x-quicktimeplayer',
-        'wax' => 'audio/x-ms-wax'
+        'wax' => 'audio/x-ms-wax',
+        'xspf'=> 'application/xspf+xml'
     );
 
     private $station;
@@ -89,6 +90,16 @@ class Playlist
             foreach($this->getStationServers() as $url) {
                 echo $url."/".$this->getStationUrl()."\n";
             }
+        } else if ($this->extension === 'xspf') {
+            echo '<?xml version="1.0"?>'."\n".'<playlist xmlns="http://xspf.org/ns/0/" version="1">'."\n".'<title/>'."\n".'<creator/>'."\n".'<trackList>';
+            foreach($this->getStationServers() as $url) {
+                echo "\n".'<track>';
+                echo "\n".'<location>'.$url."/".$this->getStationUrl().'</location>';
+                echo "\n".'<title>'.$this->getStationName().'</title>';
+                echo "\n".'<annotation>'.$this->getStationDescription().'</annotation>';
+                echo "\n".'</track>';
+            }
+            echo '</trackList>'."\n".'</playlist>';
         }
     }
 }
