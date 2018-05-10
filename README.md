@@ -8,6 +8,7 @@ Formats supported:
 - PLS
 - QuickTime (qtl)
 - Windows Media Player (asx or wax)
+- XML Shareable Playlist Format (XSPF)
 
 
 ## Web server configuration examples
